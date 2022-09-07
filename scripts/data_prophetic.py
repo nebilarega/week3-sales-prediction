@@ -17,6 +17,8 @@ from random import randint
 
 import matplotlib.pyplot as plt
 import seaborn as sns
+import mlflow
+import mlflow.prophet
 
 from prophet import Prophet
 from prophet.plot import add_changepoints_to_plot, plot_cross_validation_metric
@@ -93,6 +95,7 @@ class Prophetic():
                 .add_seasonality(name='monthly', period=30.5, fourier_order=5) \
                 .fit(self.tsdf)
                 )
+
         
         future = model.make_future_dataframe(periods)
         forecast = model.predict(future)
@@ -127,6 +130,10 @@ class Prophetic():
         ax.set_ylabel('Engagement rate')
         ax.tick_params(axis='x', rotation=45)
         ax.set(title='Engagement rate model fit & prediction for Campaign ID ')
+        plt.savefig("../images/prophet_output.png")
+        os.chdir("../")
+        mlflow.prophet.log_model(model, "Prophet model")
+        mlflow.log_artifact("images/prophet_output.png")
         
         return fig, components
         
