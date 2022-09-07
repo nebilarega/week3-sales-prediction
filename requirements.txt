@@ -4,3 +4,4 @@ prophet
 matplotlib
 seaborn
 scipy
+mlflow
